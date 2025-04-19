@@ -1,23 +1,24 @@
-# src/model.py
+# src/model.pySkipping analyzing "joblib": module is installed, but missing library stubs or py.typed markerMypyimport-u
 from sklearn.ensemble import RandomForestRegressor
 import joblib
 import xgboost as xgb
-from tensorflow.keras.models import Sequential
-from tensorflow.keras.layers import LSTM, Dense, Dropout
+from tensorflow.keras.models import Sequential # type: ignore
+from tensorflow.keras.layers import LSTM, Dense, Dropout # type: ignore
 from sklearn.metrics import mean_absolute_error, mean_squared_error
 
-def train_random_forest(X_train, y_train):
+def train_random_forest(X_train, y_train)-> RandomForestRegressor:
     # Initialize and train Random Forest Regressor
     rf_model = RandomForestRegressor(n_estimators=100, random_state=42)
     rf_model.fit(X_train, y_train)
     return rf_model
 
-def train_xgboost(X_train, y_train):
+def train_xgboost(X_train, X_val, y_train, y_val):
     # Prepare data for XGBoost
     dtrain = xgb.DMatrix(X_train, label=y_train)
+    dval = xgb.DMatrix(X_val, label=y_val)
     params = {'objective': 'reg:squarederror', 'eval_metric': 'rmse'}
-    model = xgb.train(params, dtrain, num_boost_round=100)
-    return model
+    model = xgb.train(params, dtrain, num_boost_round=100, evals=[(dval, 'eval')])
+    return model, dval 
 
 def train_lstm(X_train, y_train):
     # Reshape data for LSTM input
@@ -37,7 +38,9 @@ def train_lstm(X_train, y_train):
 
 def evaluate_model(model, X_val, y_val):
     # Make predictions on the validation set
-    if isinstance(model, RandomForestRegressor) or isinstance(model, xgb.Booster):
+    if isinstance(model, RandomForestRegressor):
+        val_predictions = model.predict(X_val)
+    elif isinstance(model, xgb.Booster):
         val_predictions = model.predict(X_val)
     elif isinstance(model, Sequential):
         X_val_lstm = X_val.values.reshape((X_val.shape[0], 1, X_val.shape[1]))
