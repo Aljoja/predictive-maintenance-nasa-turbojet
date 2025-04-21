@@ -1,0 +1,27 @@
+{
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "name": "Run train.py",
+            "type": "debugpy",
+            "request": "launch",
+            "module": "src.train",  // Path to train.py
+            "args": [],
+            "console": "integratedTerminal",
+            "env": {
+                "PYTHONPATH": "${workspaceFolder}/src"  // Set PYTHONPATH to the src folder
+            }
+        },
+        {
+            "name": "Run inference.py",
+            "type": "debugpy",
+            "request": "launch",
+            "module": "src.inference",  // Path to inference.py
+            "args": [],
+            "console": "integratedTerminal",
+            "env": {
+                "PYTHONPATH": "${workspaceFolder}/src"  // Set PYTHONPATH to the src folder
+            }
+        }
+    ]
+}

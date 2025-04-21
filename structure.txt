@@ -1,0 +1,30 @@
+project/
+│
+├── data/                      # Data directory (raw and processed data)
+│   ├── raw/                   # Raw data files (e.g., train_FD001.txt, test_FD001.txt)
+│   └── processed/             # Processed data after cleaning and feature engineering
+│
+├── notebooks/                 # Jupyter notebooks for exploration, feature engineering, and testing
+│   ├── 01_data_exploration.ipynb  # Data loading, exploration, and basic analysis
+│   ├── 02_feature_engineering.ipynb # Feature engineering, creating rolling/delta features, etc.
+│   ├── 03_model_training.ipynb  # Training, evaluation, and testing of models
+│   ├── 04_model_testing.ipynb
+│   └── 05_hyperparameter_tuning.ipynb
+│
+├── src/                       # Source code for the project (functions and models)
+│   ├── __init__.py            # Marks the folder as a Python package
+│   ├── data_preprocessing.py  # Functions for loading, cleaning, and preprocessing data
+│   ├── feature_engineering.py # Functions for feature creation (e.g., rolling stats, lag features)
+│   ├── model_definition.py   # Functions to define models (Random Forest, XGBoost, LSTM, etc.)
+│   ├── train.py              # Training code for models and hyperparameter tuning
+│   ├── inference.py          # Code for model inference and prediction on new data
+│   └── utils.py              # Any utility functions (e.g., saving models, logging)
+│
+├── models/                    # Folder to store trained models
+│   ├── random_forest_model.pkl  # Example saved model
+│   ├── xgboost_model.json      # Example saved model
+│   └── lstm_model.h5          # Example saved model
+│
+├── requirements.txt           # List of dependencies for the project
+├── environment.yml            # Conda environment configuration (if using conda)
+└── README.md                  # Project documentation (instructions on setup, usage, etc.)

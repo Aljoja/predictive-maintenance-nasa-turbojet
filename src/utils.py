@@ -1,5 +1,70 @@
 import pandas as pd
 from sklearn.preprocessing import StandardScaler
+# src/utils.py
+
+import os
+import logging
+import joblib
+import xgboost as xgb
+from tensorflow.keras.models import save_model
+
+
+def create_logger(log_file='logs/project.log'):
+    """Set up a logger to log messages to a file."""
+    if not os.path.exists('logs'):
+        os.makedirs('logs')  # Create the logs directory if it doesn't exist
+    
+    logger = logging.getLogger()
+    logger.setLevel(logging.INFO)
+    file_handler = logging.FileHandler(log_file)
+    file_handler.setLevel(logging.INFO)
+    console_handler = logging.StreamHandler()
+    console_handler.setLevel(logging.INFO)
+    
+    formatter = logging.Formatter('%(asctime)s - %(levelname)s - %(message)s')
+    file_handler.setFormatter(formatter)
+    console_handler.setFormatter(formatter)
+    
+    logger.addHandler(file_handler)
+    logger.addHandler(console_handler)
+    
+    return logger
+
+def save_model_to_file(model, model_name):
+    """Save a trained model to a file."""
+    model_path = f'models/{model_name}.pkl'
+
+    if isinstance(model, xgb.Booster):
+        model.save_model(model_path)
+    elif isinstance(model, RandomForestRegressor):
+        joblib.dump(model, model_path)
+    else:
+        save_model(model, f'models/{model_name}.h5')
+
+    logging.info(f'Model saved as {model_name} at {model_path}')
+
+def load_model_from_file(model_name):
+    """Load a trained model from a file."""
+    model_path = f'models/{model_name}'
+
+    if model_name.endswith('.json'):
+        model = xgb.XGBRegressor()
+        model.load_model(model_path)
+    elif model_name.endswith('.pkl'):
+        model = joblib.load(model_path)
+    else:
+        model = load_model(model_path)
+
+    logging.info(f'Model {model_name} loaded from {model_path}')
+    return model
+
+def check_directory_exists(directory):
+    """Check if a directory exists, if not create it."""
+    if not os.path.exists(directory):
+        os.makedirs(directory)
+        logging.info(f"Directory {directory} created.")
+    else:
+        logging.info(f"Directory {directory} already exists.")
 
 def preprocess_data(train_df, test_df):
     # Assuming train_df and test_df are the raw dataframes
