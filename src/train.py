@@ -2,13 +2,14 @@
 from sklearn.ensemble import RandomForestRegressor
 import joblib
 import xgboost as xgb
+import pandas as pd
 from tensorflow.keras.models import Sequential # type: ignore
 from tensorflow.keras.layers import LSTM, Dense, Dropout # type: ignore
-from sklearn.metrics import mean_absolute_error, mean_squared_error
-from sklearn.model_selection import GridSearchCV
+from sklearn.metrics import mean_absolute_error, mean_squared_error, accuracy_score
+from sklearn.model_selection import GridSearchCV, train_test_split
 from src.model_definition import create_random_forest, create_xgboost, create_lstm
 from src.feature_engineering import create_rolling_features, create_delta_features, create_lag_features
-from src.data_preprocessing import load_data, clean_data, normalize_data
+from src.data_preprocessing import load_data, preprocess_data, clean_data, normalize_data
 import logging
 from src.utils import create_logger, save_model_to_file
 
@@ -42,21 +43,22 @@ def train_lstm(X_train, y_train):
     
     return model
 
-def evaluate_model(model, X_val, y_val):
-    # Make predictions on the validation set
+def evaluate_model(model, X, y):
+    # Make predictions on the set
     if isinstance(model, RandomForestRegressor):
-        val_predictions = model.predict(X_val)
+        predictions = model.predict(X)
     elif isinstance(model, xgb.Booster):
-        val_predictions = model.predict(X_val)
+        predictions = model.predict(X)
     elif isinstance(model, Sequential):
-        X_val_lstm = X_val.values.reshape((X_val.shape[0], 1, X_val.shape[1]))
-        val_predictions = model.predict(X_val_lstm)
+        X_lstm = X.values.reshape((X.shape[0], 1, X.shape[1]))
+        predictions = model.predict(X_lstm)
 
     # Evaluate the model
-    mae = mean_absolute_error(y_val, val_predictions)
-    rmse = mean_squared_error(y_val, val_predictions, squared=False)
+    mae = mean_absolute_error(y, predictions)
+    rmse = mean_squared_error(y, predictions, squared=False)
+    accuracy = accuracy_score(y, predictions.round()) # should I round the predictions?
     
-    return mae, rmse
+    return mae, rmse, accuracy
 
 def save_model(model, model_name):
     # Save the trained model
@@ -67,53 +69,60 @@ def main():
     logger = create_logger()
     
     # Load and preprocess data
-    logger.info('Loading and preprocessing data.')
-    train_df, test_df = load_data(
-        train_path = 'data/CMaps/train_FD001.txt',
-        test_path = 'data/CMaps/test_FD001.txt'
-        )
+    logger.info('Loading, preprocessing and cleaning data.')
+    train_df, test_df, rul_df = load_data(series = 1)
+    train_df = preprocess_data(train_df)
     train_df = clean_data(train_df)
     test_df = clean_data(test_df)
+    
+    # Normalize the data
+    logger.info('Normalize the sensor data using StandardScaler')
     train_df, test_df = normalize_data(train_df, test_df)
 
-    # Feature engineering
-    train_df = create_rolling_features(train_df)
-    test_df = create_rolling_features(test_df)
-    train_df = create_delta_features(train_df)
-    test_df = create_delta_features(test_df)
-    train_df = create_lag_features(train_df)
-    test_df = create_lag_features(test_df)
+    # # Feature engineering
+    # logger.info('Feature engineering started.')
+    # train_df = create_rolling_features(train_df)
+    # test_df = create_rolling_features(test_df)
+    # train_df = create_delta_features(train_df)
+    # test_df = create_delta_features(test_df)
+    # train_df = create_lag_features(train_df)
+    # test_df = create_lag_features(test_df)
 
+    logger.info('Prepping data for training models.')
     # Define features and target
     X = train_df.drop(columns=['RUL'])
     y = train_df['RUL']
+    X_train, X_test, y_train, y_test = train_test_split(X, y, test_size = 0.10, random_state = 0)
 
     # Train models
     logger.info('Training Random Forest model started.')
-    rf_model = train_random_forest(X, y)
+    rf_model = train_random_forest(X_train, y_train)
     logger.info(f'Random Forest training completed.')
 
 
-    xgb_model = train_xgboost(X, y)
+    # xgb_model = train_xgboost(X, y)
 
-    # Prepare data for LSTM
-    X_train_lstm = X.values.reshape((X.shape[0], 1, X.shape[1]))
-    lstm_model = train_lstm(X_train_lstm, y)
+    # # Prepare data for LSTM
+    # X_train_lstm = X.values.reshape((X.shape[0], 1, X.shape[1]))
+    # lstm_model = train_lstm(X_train_lstm, y)
 
-    # Evaluate models
-    rf_mae, rf_rmse = evaluate_model(rf_model, X, y)
-    xgb_mae, xgb_rmse = evaluate_model(xgb_model, X, y)
-    lstm_mae, lstm_rmse = evaluate_model(lstm_model, X, y)
+    # # Evaluate models
+    logger.info('Evaluating rf model on the training dataset.')
+    rf_mae, rf_rmse, rf_accuracy = evaluate_model(rf_model, X_train, y_train)
+    # xgb_mae, xgb_rmse = evaluate_model(xgb_model, X, y)
+    # lstm_mae, lstm_rmse = evaluate_model(lstm_model, X, y)
 
-    logger.info(f'Random Forest - MAE: {rf_mae}, RMSE: {rf_rmse}')
+    # rf_y_predict = pd.Series(rf_model.predict(X_test))
+
+    logger.info(f'Random Forest - MAE: {rf_mae}, RMSE: {rf_rmse}, Accuracy: {rf_accuracy}')
     # print(f"Random Forest - MAE: {rf_mae}, RMSE: {rf_rmse}")
-    print(f"XGBoost - MAE: {xgb_mae}, RMSE: {xgb_rmse}")
-    print(f"LSTM - MAE: {lstm_mae}, RMSE: {lstm_rmse}")
+    # print(f"XGBoost - MAE: {xgb_mae}, RMSE: {xgb_rmse}")
+    # print(f"LSTM - MAE: {lstm_mae}, RMSE: {lstm_rmse}")
 
-    # Save the models
-    save_model(rf_model, 'random_forest')
-    save_model(xgb_model, 'xgboost')
-    save_model(lstm_model, 'lstm')
+    # # Save the models
+    # save_model(rf_model, 'random_forest')
+    # save_model(xgb_model, 'xgboost')
+    # save_model(lstm_model, 'lstm')
 
 if __name__ == "__main__":
     main()

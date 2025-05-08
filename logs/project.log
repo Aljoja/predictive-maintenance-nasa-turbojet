@@ -1,3 +1,58 @@
 2025-04-21 21:15:08,857 - INFO - Loading and preprocessing data.
 2025-04-21 21:17:01,910 - INFO - Loading and preprocessing data.
 2025-04-21 21:17:34,997 - INFO - Loading and preprocessing data.
+2025-04-21 23:12:49,538 - INFO - Loading and preprocessing data.
+2025-04-21 23:17:30,846 - INFO - Loading and preprocessing data.
+2025-04-21 23:17:30,971 - INFO - Clean the data
+2025-04-21 23:23:14,444 - INFO - Loading and preprocessing data.
+2025-04-21 23:23:14,565 - INFO - Clean the data
+2025-04-21 23:33:30,653 - INFO - Loading and preprocessing data.
+2025-04-21 23:33:30,751 - INFO - Clean the data
+2025-04-22 12:06:51,980 - INFO - Loading and preprocessing data.
+2025-04-22 12:06:52,105 - INFO - Clean the data
+2025-04-22 19:34:41,157 - INFO - Loading and preprocessing data.
+2025-04-22 19:34:41,283 - INFO - Clean the data
+2025-04-22 19:34:41,283 - WARNING - Be careful
+2025-04-24 19:09:18,936 - INFO - Loading and preprocessing data.
+2025-04-24 19:14:31,611 - INFO - Loading and preprocessing data.
+2025-04-24 19:16:41,362 - INFO - Loading and preprocessing data.
+2025-04-24 19:21:55,471 - INFO - Loading and preprocessing data.
+2025-04-24 19:27:23,980 - INFO - Loading and preprocessing data.
+2025-04-24 20:31:37,950 - INFO - Loading, preprocessing and cleaning data.
+2025-04-24 20:32:02,384 - INFO - Normalize the sensor data using StandardScaler
+2025-04-24 20:32:02,439 - INFO - Prepping data for training models.
+2025-04-24 20:32:02,455 - INFO - Training Random Forest model started.
+2025-04-24 20:33:08,263 - INFO - Random Forest training completed.
+2025-04-24 20:39:52,375 - INFO - Loading, preprocessing and cleaning data.
+2025-04-24 20:40:10,137 - INFO - Normalize the sensor data using StandardScaler
+2025-04-24 20:40:10,186 - INFO - Prepping data for training models.
+2025-04-24 20:40:10,202 - INFO - Training Random Forest model started.
+2025-04-24 20:41:16,223 - INFO - Random Forest training completed.
+2025-04-27 18:37:34,091 - INFO - Loading, preprocessing and cleaning data.
+2025-04-27 18:37:49,442 - INFO - Normalize the sensor data using StandardScaler
+2025-04-27 18:37:49,483 - INFO - Prepping data for training models.
+2025-04-27 18:37:49,498 - INFO - Training Random Forest model started.
+2025-04-27 18:38:50,241 - INFO - Random Forest training completed.
+2025-05-03 14:12:10,766 - INFO - Loading, preprocessing and cleaning data.
+2025-05-03 14:12:24,171 - INFO - Normalize the sensor data using StandardScaler
+2025-05-03 14:12:24,206 - INFO - Prepping data for training models.
+2025-05-03 14:12:24,221 - INFO - Training Random Forest model started.
+2025-05-03 14:13:21,683 - INFO - Random Forest training completed.
+2025-05-08 11:11:59,947 - INFO - Loading, preprocessing and cleaning data.
+2025-05-08 11:12:17,901 - INFO - Normalize the sensor data using StandardScaler
+2025-05-08 11:12:17,947 - INFO - Prepping data for training models.
+2025-05-08 11:12:17,963 - INFO - Training Random Forest model started.
+2025-05-08 11:13:23,796 - INFO - Random Forest training completed.
+2025-05-08 11:25:02,851 - INFO - Loading, preprocessing and cleaning data.
+2025-05-08 11:25:18,645 - INFO - Normalize the sensor data using StandardScaler
+2025-05-08 11:25:18,694 - INFO - Prepping data for training models.
+2025-05-08 11:25:18,707 - INFO - Training Random Forest model started.
+2025-05-08 11:26:21,930 - INFO - Random Forest training completed.
+2025-05-08 11:26:21,937 - INFO - Evaluating rf model on the training dataset.
+2025-05-08 11:28:02,780 - INFO - Loading, preprocessing and cleaning data.
+2025-05-08 11:28:18,158 - INFO - Normalize the sensor data using StandardScaler
+2025-05-08 11:28:18,199 - INFO - Prepping data for training models.
+2025-05-08 11:28:18,210 - INFO - Training Random Forest model started.
+2025-05-08 11:29:21,685 - INFO - Random Forest training completed.
+2025-05-08 11:29:21,685 - INFO - Evaluating rf model on the training dataset.
+2025-05-08 11:29:22,244 - INFO - Random Forest - MAE: 14.2685829697851, RMSE: 18.21433099898284, Accuracy: 0.02138202186675284
